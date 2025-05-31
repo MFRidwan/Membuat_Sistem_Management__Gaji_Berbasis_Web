@@ -135,52 +135,21 @@ elseif ($jabatan === 'supervisor') $badgeClass = 'dark';
                 </table>
 
                 <div class="d-flex gap-2 mt-4 back-btn">
-                            <?php
-                            $query = mysqli_query($conn, "SELECT karyawan.*, jabatan.nama_jabatan 
-                                                    FROM karyawan
-                                                    JOIN jabatan ON karyawan.jabatan_id = jabatan.id 
-                                                    ORDER BY karyawan.id DESC") or die(mysqli_error($conn));
-
-                            $bulan_ini = date('Y-m');
-                            while ($row = mysqli_fetch_assoc($query)) {
-                                $id_karyawan = $row['id'];
-                                $rating_q = mysqli_query($conn, "SELECT nilai_rating FROM rating WHERE karyawan_id = $id_karyawan AND bulan = '$bulan_ini'");
-                                $data_rating = mysqli_fetch_assoc($rating_q);
-                                $nilai_rating = $data_rating['nilai_rating'] ?? '-';
-                                $bintang = is_numeric($nilai_rating) ? str_repeat('⭐', $nilai_rating) : '-';
-
-                                $jabatan = strtolower($row['nama_jabatan']);
-                                $badge_class = match ($jabatan) {
-                                    'manager' => 'primary',
-                                    'supervisor' => 'secondary',
-                                    'staff' => 'success',
-                                    'admin' => 'danger',
-                                    default => 'dark'
-                                };
-
-                                echo '
-                                            
-                                            <button class="btn btn-primary me-1 btn-edit "
-                                                data-id="' . $id_karyawan . '"
-                                                data-nama="' . htmlspecialchars($row['nama']) . '"
-                                                data-jenis-kelamin="' . $row['jenis_kelamin'] . '"
-                                                data-jabatan-id="' . $row['jabatan_id'] . '"
-                                                data-alamat="' . htmlspecialchars($row['alamat']) . '"
-                                                data-no-hp="' . $row['no_hp'] . '"
-                                                data-tanggal="' . $row['tanggal_bergabung'] . '"
-                                                data-rating="' . $nilai_rating . '"
-                                                data-foto="' . $row['foto'] . '">
-                                                Edit
-                                            </button>
-                                            <button class="btn btn-secondary">
-                                                <a href="../karyawan/karyawan.php" class="btn btn-secondary">← Kembali</a>
-                                            </button>
-
-                                            
-                    </div>';
-                            }
-                            ?>
-                            
+                    <button class="btn btn-primary me-1 btn-edit"
+                        data-id="<?= $data['id'] ?>"
+                        data-nama="<?= htmlspecialchars($data['nama']) ?>"
+                        data-umur="<?= $data['umur'] ?>"
+                        data-jenis-kelamin="<?= $data['jenis_kelamin'] ?>"
+                        data-jabatan-id="<?= $data['jabatan_id'] ?>"
+                        data-alamat="<?= htmlspecialchars($data['alamat']) ?>"
+                        data-no-hp="<?= $data['no_hp'] ?>"
+                        data-status="<?= $data['status'] ?>"
+                        data-tanggal="<?= $data['tanggal_bergabung'] ?>"
+                        data-rating="<?= $rating ?>"
+                        data-foto="<?= $data['foto'] ?>">
+                        Edit
+                    </button>
+                    <a href="../karyawan/karyawan.php" class="btn btn-secondary">← Kembali</a>
                 </div>
             </div>
         </div>
@@ -188,94 +157,94 @@ elseif ($jabatan === 'supervisor') $badgeClass = 'dark';
 </div>
 
 <!--- edit karyawan detail ----->
- <div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="modalEditLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content p-5">
-                    <form id="formEditKaryawan" novalidate enctype="multipart/form-data">
-                        <input type="hidden" name="id" id="edit-id">
-                        <div class="container">
-                            <div class="row g-4">
-                                <div class="col-md-6">
-                                    <label class="form-label">Nama</label>
-                                    <input type="text" name="nama" id="edit-nama" class="form-control" required>
-                                    <div class="invalid-feedback">Nama wajib diisi.</div>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Umur</label>
-                                    <input type="text" name="umur" id="edit-umur" class="form-control" min="1" required value="<?= $data['umur'] ?>">
-                                    <div class="invalid-feedback">Umur wajib diisi.</div>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Jenis Kelamin</label>
-                                    <select name="jenis_kelamin" id="edit-jenis-kelamin" class="form-select" required>
-                                        <option value="Laki-laki">Laki-laki</option>
-                                        <option value="Perempuan">Perempuan</option>
-                                    </select>
-                                    <div class="invalid-feedback">Jenis kelamin wajib dipilih.</div>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Status</label>
-                                    <select name="status" id="edit-status" class="form-select" required>
-                                        <option value="Aktif">Aktif</option>
-                                        <option value="Tidak aktif">Tidak aktif</option>
-                                    </select>
-                                    <div class="invalid-feedback">Status wajib dipilih.</div>
-                                </div>
-                                <div class="col-md-12">
-                                    <label class="form-label">Jabatan</label>
-                                    <select name="jabatan_id" id="edit-jabatan-id" class="form-select" required>
-                                        <?php
-                                        $jabatan = mysqli_query($conn, "SELECT * FROM jabatan");
-                                        while ($row = mysqli_fetch_assoc($jabatan)) {
-                                            echo "<option value='{$row['id']}'>{$row['nama_jabatan']}</option>";
-                                        }
-                                        ?>
-                                    </select>
-                                    <div class="invalid-feedback">Jabatan wajib dipilih.</div>
-                                </div>
-                                <div class="col-md-12">
-                                    <label class="form-label">Alamat</label>
-                                    <textarea name="alamat" id="edit-alamat" class="form-control" required></textarea>
-                                    <div class="invalid-feedback">Alamat wajib diisi.</div>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">No HP</label>
-                                    <input type="text" name="no_hp" id="edit-no-hp" class="form-control" required>
-                                    <div class="invalid-feedback">No HP wajib diisi.</div>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Tanggal Bergabung</label>
-                                    <input type="date" name="tanggal_bergabung" id="edit-tanggal" class="form-control" max="<?= date('Y-m-d') ?>" required>
-                                    <div class="invalid-feedback">Tanggal bergabung wajib diisi.</div>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Foto</label>
-                                    <input type="file" id="edit-foto" name="foto" class="form-control" accept="image/*">
-                                    <div class="mt-2">
-                                        <img id="foto-preview" src="" class="img-thumbnail">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Rating (1-5)</label>
-                                    <select name="nilai_rating" id="edit-rating" class="form-select" required>
-                                        <option value="1">1 - Sangat Buruk</option>
-                                        <option value="2">2 - Buruk</option>
-                                        <option value="3">3 - Cukup</option>
-                                        <option value="4">4 - Baik</option>
-                                        <option value="5">5 - Sangat Baik</option>
-                                    </select>
-                                    <div class="invalid-feedback">Rating wajib dipilih.</div>
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-between mt-4">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                                <button type="submit" class="btn btn-primary">Update</button>
+<div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="modalEditLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content p-5">
+            <form id="formEditKaryawan" novalidate enctype="multipart/form-data">
+                <input type="hidden" name="id" id="edit-id">
+                <div class="container">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label class="form-label">Nama</label>
+                            <input type="text" name="nama" id="edit-nama" class="form-control" required>
+                            <div class="invalid-feedback">Nama wajib diisi.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Umur</label>
+                            <input type="text" name="umur" id="edit-umur" class="form-control" min="1" required value="<?= $data['umur'] ?>">
+                            <div class="invalid-feedback">Umur wajib diisi.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Jenis Kelamin</label>
+                            <select name="jenis_kelamin" id="edit-jenis-kelamin" class="form-select" required>
+                                <option value="Laki-laki">Laki-laki</option>
+                                <option value="Perempuan">Perempuan</option>
+                            </select>
+                            <div class="invalid-feedback">Jenis kelamin wajib dipilih.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Status</label>
+                            <select name="status" id="edit-status" class="form-select" required>
+                                <option value="Aktif">Aktif</option>
+                                <option value="Tidak aktif">Tidak aktif</option>
+                            </select>
+                            <div class="invalid-feedback">Status wajib dipilih.</div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Jabatan</label>
+                            <select name="jabatan_id" id="edit-jabatan-id" class="form-select" required>
+                                <?php
+                                $jabatan = mysqli_query($conn, "SELECT * FROM jabatan");
+                                while ($row = mysqli_fetch_assoc($jabatan)) {
+                                    echo "<option value='{$row['id']}'>{$row['nama_jabatan']}</option>";
+                                }
+                                ?>
+                            </select>
+                            <div class="invalid-feedback">Jabatan wajib dipilih.</div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Alamat</label>
+                            <textarea name="alamat" id="edit-alamat" class="form-control" required></textarea>
+                            <div class="invalid-feedback">Alamat wajib diisi.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">No HP</label>
+                            <input type="text" name="no_hp" id="edit-no-hp" class="form-control" required>
+                            <div class="invalid-feedback">No HP wajib diisi.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Tanggal Bergabung</label>
+                            <input type="date" name="tanggal_bergabung" id="edit-tanggal" class="form-control" max="<?= date('Y-m-d') ?>" required>
+                            <div class="invalid-feedback">Tanggal bergabung wajib diisi.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Foto</label>
+                            <input type="file" id="edit-foto" name="foto" class="form-control" accept="image/*">
+                            <div class="mt-2">
+                                <img id="foto-preview" src="" class="img-thumbnail">
                             </div>
                         </div>
-                    </form>
+                        <div class="col-md-6">
+                            <label class="form-label">Rating (1-5)</label>
+                            <select name="nilai_rating" id="edit-rating" class="form-select" required>
+                                <option value="1">1 - Sangat Buruk</option>
+                                <option value="2">2 - Buruk</option>
+                                <option value="3">3 - Cukup</option>
+                                <option value="4">4 - Baik</option>
+                                <option value="5">5 - Sangat Baik</option>
+                            </select>
+                            <div class="invalid-feedback">Rating wajib dipilih.</div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between mt-4">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
+    </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -285,74 +254,73 @@ elseif ($jabatan === 'supervisor') $badgeClass = 'dark';
 
 <script>
     // Event Delegation untuk Tombol Edit
-document.addEventListener('click', function(e) {
-    if (e.target.classList.contains('btn-edit')) {
-        const btn = e.target;
-        const modal = new bootstrap.Modal(document.getElementById('modalEdit'));
-        
-        // Isi form edit
-        document.getElementById('edit-id').value = btn.dataset.id;
-        document.getElementById('edit-nama').value = btn.dataset.nama;
-        document.getElementById('edit-umur').value = btn.dataset.umur || '';
-        document.getElementById('edit-jenis-kelamin').value = btn.dataset.jenisKelamin;
-        document.getElementById('edit-jabatan-id').value = btn.dataset.jabatanId;
-        document.getElementById('edit-alamat').value = btn.dataset.alamat;
-        document.getElementById('edit-no-hp').value = btn.dataset.noHp;
-        document.getElementById('edit-status').value = btn.dataset.status || 'Aktif';
-        document.getElementById('edit-tanggal').value = btn.dataset.tanggal;
-        document.getElementById('edit-rating').value = btn.dataset.rating || '3';
-        
-        // Tampilkan foto preview jika ada
-        if (btn.dataset.foto) {
-            const fotoPreview = document.getElementById('foto-preview');
-            fotoPreview.src = '../uploads/' + btn.dataset.foto;
-            fotoPreview.style.display = 'block';
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('btn-edit')) {
+            const btn = e.target;
+            const modal = new bootstrap.Modal(document.getElementById('modalEdit'));
+            
+            // Isi form edit
+            document.getElementById('edit-id').value = btn.dataset.id;
+            document.getElementById('edit-nama').value = btn.dataset.nama;
+            document.getElementById('edit-umur').value = btn.dataset.umur || '';
+            document.getElementById('edit-jenis-kelamin').value = btn.dataset.jenisKelamin;
+            document.getElementById('edit-jabatan-id').value = btn.dataset.jabatanId;
+            document.getElementById('edit-alamat').value = btn.dataset.alamat;
+            document.getElementById('edit-no-hp').value = btn.dataset.noHp;
+            document.getElementById('edit-status').value = btn.dataset.status || 'Aktif';
+            document.getElementById('edit-tanggal').value = btn.dataset.tanggal;
+            document.getElementById('edit-rating').value = btn.dataset.rating || '3';
+            
+            // Tampilkan foto preview jika ada
+            if (btn.dataset.foto) {
+                const fotoPreview = document.getElementById('foto-preview');
+                fotoPreview.src = '../uploads/' + btn.dataset.foto;
+                fotoPreview.style.display = 'block';
+            }
+            
+            modal.show();
         }
-        
-        modal.show();
-    }
-});
+    });
 
-// Form Edit Karyawan
-document.getElementById('formEditKaryawan').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const form = e.target;
-    
-    if (!form.checkValidity()) {
-        e.stopPropagation();
-        form.classList.add('was-validated');
-        return;
-    }
-    
-    const formData = new FormData(form);
-    
-    fetch('karyawan_edit.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(res => res.text())
-    .then(response => {
-        if (response.trim() === "success") {
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil!',
-                text: 'Data karyawan berhasil diperbarui.',
-                confirmButtonText: 'OK'
-            }).then(() => window.location.reload());
-        } else {
-            throw new Error(response);
+    // Form Edit Karyawan
+    document.getElementById('formEditKaryawan').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const form = e.target;
+        
+        if (!form.checkValidity()) {
+            e.stopPropagation();
+            form.classList.add('was-validated');
+            return;
         }
-    })
-    .catch(err => {
-        Swal.fire({
-            icon: 'error',
-            title: 'Gagal!',
-            text: err.message || 'Terjadi kesalahan saat memperbarui data',
-            confirmButtonColor: '#dc3545'
+        
+        const formData = new FormData(form);
+        
+        fetch('karyawan_edit.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => res.text())
+        .then(response => {
+            if (response.trim() === "success") {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: 'Data karyawan berhasil diperbarui.',
+                    confirmButtonText: 'OK'
+                }).then(() => window.location.reload());
+            } else {
+                throw new Error(response);
+            }
+        })
+        .catch(err => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: err.message || 'Terjadi kesalahan saat memperbarui data',
+                confirmButtonColor: '#dc3545'
+            });
         });
     });
-});
 </script>
 </body>
 </html>
-

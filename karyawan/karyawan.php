@@ -128,7 +128,7 @@
                     default => 'dark'
                 };
 
-                echo '
+            echo '
                 <div class="col">
                     <div class="card kartu-karyawan shadow-sm h-100">
                         <img src="../uploads/' . $row['foto'] . '" class="foto-karyawan card-img-top" alt="Foto">
