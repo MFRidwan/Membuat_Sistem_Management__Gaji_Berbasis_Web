@@ -302,8 +302,10 @@
                                     <select name="jabatan_id" id="edit-jabatan-id" class="form-select" required>
                                         <?php
                                         $jabatan = mysqli_query($conn, "SELECT * FROM jabatan");
+
                                         while ($row = mysqli_fetch_assoc($jabatan)) {
                                             echo "<option value='{$row['id']}'>{$row['nama_jabatan']}</option>";
+                                        
                                         }
                                         ?>
                                     </select>

@@ -71,7 +71,7 @@
 
       <!-- Copyright -->
       <div class="text-center p-3" style="background-color: #0d6efd">
-        © 2025 Copyright:
+       PT. Sinergi Digital Media © 2025 Copyright:
         <a class="text-white" href="#">MFRidwan</a>
       </div>
     </footer>
