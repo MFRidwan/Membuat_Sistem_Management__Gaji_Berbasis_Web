@@ -1,3 +1,4 @@
+
 <?php include '../koneksi.php'; ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -124,7 +125,9 @@
             <div class="modal-content p-5">
               <form id="formTambahGaji" novalidate>
                 <div class="row">
+                  <!-- Kolom Kiri -->
                   <div class="col-md-6">
+                    <!-- Nama Karyawan -->
                     <div class="mb-3">
                       <label class="form-label">Nama Karyawan</label>
                       <select name="karyawan_id" class="form-select" required>
@@ -138,28 +141,46 @@
                       </select>
                       <div class="invalid-feedback">Silakan pilih karyawan.</div>
                     </div>
+
+                    <!-- Bulan -->
                     <div class="mb-3">
                       <label class="form-label">Bulan</label>
                       <input type="month" name="bulan" class="form-control" required>
                       <div class="invalid-feedback">Bulan harus diisi.</div>
                     </div>
+
+                    <!-- Jumlah Jam Kerja -->
                     <div class="mb-3">
                       <label class="form-label">Jumlah Jam Kerja</label>
                       <input type="number" name="jumlah_jam" class="form-control" required min="0" step="0.1">
                       <div class="invalid-feedback">Masukkan jumlah jam kerja yang valid.</div>
                     </div>
+
+                    <!-- Rating -->
+                    <div class="mb-3">
+                      <label class="form-label">Rating (1-5)</label>
+                      <input type="number" name="rating" class="form-control" required min="1" max="5">
+                      <div class="invalid-feedback">Masukkan rating antara 1 hingga 5.</div>
+                    </div>
                   </div>
+
+                  <!-- Kolom Kanan -->
                   <div class="col-md-6">
+                    <!-- Tarif Lembur -->
                     <div class="mb-3">
                       <label class="form-label">Tarif Lembur Per Jam (Rp)</label>
                       <input type="number" name="tarif_lembur" class="form-control" required min="0">
                       <div class="invalid-feedback">Masukkan tarif lembur yang valid.</div>
                     </div>
+
+                    <!-- Jumlah Jam Lembur -->
                     <div class="mb-3">
                       <label class="form-label">Jumlah Jam Lembur</label>
                       <input type="number" name="jumlah_jam_lembur" class="form-control" required min="0" step="0.1">
                       <div class="invalid-feedback">Masukkan jumlah jam lembur yang valid.</div>
                     </div>
+
+                    <!-- Bonus -->
                     <div class="mb-3">
                       <label class="form-label">Bonus (Rp)</label>
                       <input type="number" name="bonus" class="form-control" required min="0">
@@ -167,10 +188,14 @@
                     </div>
                   </div>
                 </div>
+
+                <!-- Total Gaji -->
                 <div class="mb-3">
                   <label class="form-label">Total Gaji (Rp)</label>
                   <input type="number" name="total_gaji" class="form-control" readonly>
                 </div>
+
+                <!-- Tombol Simpan -->
                 <button type="submit" class="btn btn-success w-100">
                   <i class="bi bi-check-circle-fill me-1"></i> Simpan
                 </button>
@@ -178,6 +203,7 @@
             </div>
           </div>
         </div>
+
 
         <!-- Modal Edit Gaji -->
         <div class="modal fade" id="modalEdit" tabindex="-1" aria-hidden="true">
