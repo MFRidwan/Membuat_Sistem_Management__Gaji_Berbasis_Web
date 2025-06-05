@@ -149,7 +149,11 @@ elseif ($jabatan === 'supervisor') $badgeClass = 'dark';
                         data-foto="<?= $data['foto'] ?>">
                         Edit
                     </button>
+<<<<<<< HEAD
                     <a href="../karyawan/karyawan.php" class="btn btn-secondary">← Kembali</a>
+=======
+                    <a href="dashboard.php" class="btn btn-secondary">← Kembali</a>
+>>>>>>> 57d40c5b2c3c7c41aa941d0dae9bc26cf7bdedfd
                 </div>
             </div>
         </div>
@@ -295,7 +299,11 @@ elseif ($jabatan === 'supervisor') $badgeClass = 'dark';
         
         const formData = new FormData(form);
         
+<<<<<<< HEAD
         fetch('karyawan_edit.php', {
+=======
+        fetch('/karyawan/karyawan_edit.php', {
+>>>>>>> 57d40c5b2c3c7c41aa941d0dae9bc26cf7bdedfd
             method: 'POST',
             body: formData
         })
